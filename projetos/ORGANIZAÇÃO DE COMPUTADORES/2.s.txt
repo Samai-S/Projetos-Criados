@@ -1,0 +1,44 @@
+main:
+		addi x10,x0,10 #adicionando um valor para n
+        call fibonacci	#realizando a chamada do fibonacci
+        beq x0,x0,end	#finaliza o programa
+
+fibonacci:
+        addi    sp,sp,-32 #iniciando a pilha de execução
+        sw      x1,28(sp)	#salvando o endereço de retorno na pilha
+        sw      x8,24(sp)	#salvando valorers do registrador x8 na pilha
+        sw      x9,20(sp)	#salvando valorers do registrador x9 na pilha
+        addi    x8,sp,32	#adicionando valor da pilha no registrador x8 + 32
+        sw      x10,-20(x8)	#salvando o valor de x10 na pilha na posição apontada por x8
+        lw      x15,-20(x8)	#recuperando o valor apontado po x8 -20 e salvando em x15
+        bne    x15,x0,function_1	#chamando a recursao enquanto x15 for maior diferente de zero
+        addi      x15,x0,0	#x15 = 0
+        j       function_3	#pulando para função auxiliar 
+function_1:
+        lw      x14,-20(x8) #carrega conteudo do apontado em x8 - 20 para o registrador x14
+        li      x15,1 #x15= 1
+        bne     x14,x15,function_2	#enquanto x14 diferente de x15 ir para recursão
+        addi      x15,x0,1	#x15=1
+        j       function_3	#pulando para função auxiliar
+        
+function_2:
+        lw      x15,-20(x8) #carrega o conteudo apontado por x8 -20 para o registrador x15
+        addi    x15,x15,-1	#subtrai 1 do registrador x15
+        mv      x10,x15		#move o contudo de x15 para x10
+        call    fibonacci 	#recursao
+        mv      x9,x10		#move o contudo de x10 para x19
+        lw      x15,-20(x8)	#carrega o conteudo apontado por x8 -20 para o registrador x15
+        addi    x15,x15,-2	#subtrai 2 do registrador x15
+        mv      x10,x15		#move o contudo de x15 para x10
+        call    fibonacci	#recursao
+        mv      x15,x10		#move o contudo de x10 para x15
+        add     x15,x9,x15	#realiza a soma x15=x15+x9
+function_3:
+        mv      x10,x15		#move o contudo de x15 para x10
+        lw      x1,28(sp)	#retoma o valor salvo no registrador de retorno na pilha
+        lw      x8,24(sp)	#retoma o valor do registrador x8 na pilha
+        lw      x9,20(sp)	#retoma o valor do registrador x9 na pilha
+        addi    sp,sp,32	#desaloca o espaço na pilha alocado anteriormente
+        jalr x0,0(x1)		#retorna a função de chamada	
+        
+ end:

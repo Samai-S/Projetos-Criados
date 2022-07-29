@@ -1,0 +1,56 @@
+.data
+array: .word 27, 16, 20, 49, 39, 48, 38, 7, 5, 19 #criando vetor
+range: .word 10 #tamanho do vetor
+
+
+.text 
+
+main:
+	la x10 array         # x10 = base address of array
+	la x11 range		 # x11 = size of array
+
+bubble_sort:
+	
+    addi x5,x0,-1        # i
+    addi x6,x0,-1         # j
+    lw x7,0(x11)		 # size of range
+    
+loop_i:
+		addi x5,x5,1	#adicionando 1 ao i
+        lw x7,0(x11)	#carregando o tamanho do vetor
+        bge x5,x7,exit	#i>=tamanho vetor, sair do loop
+        addi x6,x0,-1	# j =-1 para iniciar o loop
+        addi x28,x10,-4 #apontador do array[-1] para quando iniciar o loop somar 1 
+        addi x29,x10,0	#apontador do array[0] para x29
+        addi x7,x7,-1	#x7 = x7-1 para realizar o bubblesort 
+        sub x7,x7,x5	#x7= x7-i
+loop_j:
+		addi x6,x6,1	#j=j+1
+        bge x6,x7,loop_i #j>= tamanho de x7 retornar ao loop de i
+  		addi x28,x28,4	#somando 4 ao conteudo de x28
+        addi x29,x28,4	#somando 4 ao conteudo de x28 já anteriormente somado e guardando no x29
+        lw x30,0(x28)	#carregando o conteudo apontado por x28 e salvando em x30
+        lw x31,0(x29)	#carregando o conteudo apontado por x29 e salvando em x31
+        bgt x30,x31,switch	#se x30>x31 realizar o swap
+       	bge x0,x0,loop_j	#volta ao loop de j
+        bge x0,x0,exit	#apenas sai caso haja algum erro
+        
+        
+switch:
+		sw x31,0(x28)	#salva conteudo de x31 no array na posição apaontada em x28
+        sw x30,0(x29) 	#salva conteudo de x30 no array na posição apaontada em x29
+		
+        bge x0,x0,loop_j	#volta ao loop de j
+                
+    	
+exit:	#apenas exibe os elementos ordenados no registrador x9
+	lw x9,0(x10)
+    lw x9,4(x10)
+    lw x9,8(x10)
+    lw x9,12(x10)
+    lw x9,16(x10)
+    lw x9,20(x10)
+    lw x9,24(x10)
+    lw x9,28(x10)
+    lw x9,32(x10)
+    lw x9,36(x10)

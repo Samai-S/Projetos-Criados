@@ -1,0 +1,37 @@
+main:
+addi x10,x0,5	#valor de C
+addi x11,x0,0	#valor de Q
+addi x12,x0,0	#valor de V	
+	
+call capacitor	#chamada da função
+beq x0,x0,end	#chamada para o final da função
+capacitor:
+	beq x10,x0,capacitance #conferindo qual variável é igual a zero
+    beq x11,x0,charge	#conferindo qual variável é igual a zero
+    beq x12,x0,voltage 	#conferindo qual variável é igual a zero
+    capacitance:
+    beq x11,x0,zero_return #conferindo se mais de uma variável é igual a zero
+    beq x12,x0,zero_return	#conferindo se mais de uma variável é igual a zero
+    div x10,x11,x12	#realizando a operação para finalizar a função
+    jalr x0,0(x1)	#retornando para função que chamou
+    
+    charge:
+    beq x10,x0,zero_return	#conferindo se mais de uma variável é igual a zero
+    beq x12,x0,zero_return	#conferindo se mais de uma variável é igual a zero
+    mul x11,x10,x12	#realizando a operação para finalizar a função
+    jalr x0,0(x1)	#retornando para função que chamou
+    
+    voltage:
+    beq x10,x0,zero_return	#conferindo se mais de uma variável é igual a zero
+    beq x11,x0,zero_return	#conferindo se mais de uma variável é igual a zero
+    div x12,x11,x10	#realizando a operação para finalizar a função
+    jalr x0,0(x1)	#retornando para função que chamou
+    
+    zero_return:
+    addi x10,x0,0	#zerando todas variáveis
+    addi x11,x0,0	#zerando todas variáveis
+    addi x12,x0,0	#zerando todas variáveis
+    jalr x0,0(x1)	#retornando para função que chamou 
+    
+    
+end:
